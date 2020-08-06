@@ -13,12 +13,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
+As our environment increasingly feels the negative effects of of climate change, there is a critical need for innovative and profitable solutions that will help to reduce the effects of climate change. Carbon dioxide (CO2) is a persistent atmospheric gas, and it seems increasingly likely that concentrations of CO2 and other greenhouse gases in the atmosphere will over shoot targets of“safe”levels (e.g. the 450 ppm target set as the tolerable level of atmospheric concentration [1].This has spurred many developed countries and organizations around the world to invest and research ways to generate energy without creating pollution using methods such as solar capture. Additionally, this phenomenon of reducing our environmental footprint has led to the development of air capture technology, with the goal of removing carbon dioxide from the atmosphere and safely and permanently disposing of it. Stakeholders of such devices are compensated for the amount of tons of CO2 are captured and disposed of which presents a potentially valuable investment opportunity given favorable market conditions.
+
 ## Motivation
+
+Wide-spread implementation of direct air capture (DAC) devices must be funded either governments or the private sector and must be profitable for the stakeholders DAC devices to be sustainable. Thus the purpose of this project is to develop methods for analyzing the profitability of DAC devices given the Locational Marginal Price (LMP) of electricity in given regions. The goal of this is to enable further research of DAC devices as an investment asset. 
 
 ## Problem
 
-## Data
+Price volatility in the electricity market poses a challenge in determining the profit potential for a DAC device. As electricity prices fluctuate, the profit margins on direct air capture could potentially be positive, negative and in some cases break even. Hence, the problem we seek to solve is how do we maximize stakeholder profit given the market fluctuations in the price of electricity.
 
 ## Solution
 
+## Data
+
+The data that we will use in the project will come from the California Independent System Operator (ISO) database that tracks real time information about energy generating devices on the west coast. It tracks LMP for each device as well. Additional data may also be pulled from the New York ISO.
+
 ## Value
+
+## References
+* [1] https://www.researchgate.net/profile/Mark_Workman2/publication/271581596_High-level_techno-economic_assessment_of_negative_emissions_technologies/links/59ed956daca272cddde06ee2/High-level-techno-economic-assessment-of-negative-emissions-technologies.pdf
