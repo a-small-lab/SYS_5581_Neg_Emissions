@@ -1,5 +1,5 @@
 ---
-title: "SYS_5581_Neg_Emissions_Proposal"
+title: "SYS 5581 Neg Emissions Proposal"
 author: "David Hill, Jr."
 date: "8/6/2020"
 output:

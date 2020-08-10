@@ -1,0 +1,40 @@
+---
+title: "SYS 5581 DACS Economics"
+author: "David Hill, Jr."
+date: "8/10/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r load packages and setup, message=FALSE, include=FALSE}
+library(tidyverse)
+library(ggthemes)
+
+wr_dir <- "/home/dhillii/Projects/SYS_5581_Neg_Emissions/data"
+setwd(wr_dir)
+```
+
+## Data ETL 
+```{r Data ETL}
+folder.names <- list.files(wr_dir)
+print(folder.names)
+for( i in 1:length(folder.names))
+  {
+  # folder <- paste(wr_dir,"/",folder.names[i], sep="")
+  # file.names <- dir(folder, pattern =".csv")
+  # for( i in 1:length(file.names)){
+  #   file <- paste(wr_dir,"/",folder.names[i], "/", filr.names[i], sep="")
+  #   
+  # }
+  
+  files <- list.files(pattern = '.csv')
+  acts <- lapply(files, read.csv)
+  
+  }
+
+```
+
+
+
