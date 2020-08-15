@@ -23,7 +23,9 @@ Wide-spread implementation of direct air capture (DAC) devices must be funded ei
 
 Price volatility in the electricity market poses a challenge in determining the profit potential for a DAC device. As electricity prices fluctuate, the profit margins on direct air capture could potentially be positive, negative and in some cases break even. Hence, the problem we seek to solve is how do we maximize stakeholder profit given the market fluctuations in the price of electricity.
 
-## Solution
+## Method
+
+In order to account for market electricity prices, we must first understand and analyze those prices over time. This will be done by collecting and plotting the data in a way that is easier to understand. From there, we build a model in which we can run scenarios to determine DAC profitability based on market data.
 
 ## Data
 
