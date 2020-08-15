@@ -64,11 +64,14 @@ To understand the distribution of the data we also plotted histograms of LBMP fr
 
 \begin{figure}[H] \centering \includegraphics[scale=.6]{figure6.png} \caption{LBMP Frequency for Central 2019} \end{figure}
 
+These visualizations give us a very good idea about how LBMP data behaves. Thus, we can now establish the parameters that will form the basis of our analysis.
 
 
-# Parameters
+# Quantitative Analysis
 
-Here we define the parameters that form the basis of our analysis:
+## Parameters
+
+Our model parameters are as follows:
 
 * $p$ : price per unit of carbon offsets (\$ / ton $CO_2$), constant 
 * $c_t$ : cost of electric power in hour $t$ (\$ / MWh): changes each hour (LBMP)
@@ -77,14 +80,91 @@ Here we define the parameters that form the basis of our analysis:
 * $N$ : plant maximum capture rate (ton $CO_2$/h), constant
 * $t = 1, \ldots, T$ : index of hours in the calendar year ($T \approx 8260$ )
 
+> Since our LBMP data is in 5 minute intervals, we apply our hourly calculation to each 5 minute LBMP and convert that into 5 minute revenue by multiplying by a factor of 5/60.
+
+## Derived Quantities
+
+  * $C_t = c_t \lambda N$ : total costs of power, if plant is operating at maximum capacity
+  * $R_t = \max\{p-c_t \lambda, 0\}N$ : operating revenue in hour $t$, assuming optimal operations 
+
+## Definitions:
+
+  * *Operating net income*: Total revenues from carbon offsets less cost of power
+
 
 # Assumptions
 
-In our analysis, we assume stakeholders are compensated per ton of CO2 removed from the atmosphere. This may be a result of a policy set by state and local governments. We also assume that the plant is smart enough to cease operation when the LBMP of electricity would cause the plant to run at a loss and would run at maximum capacity otherwise. 
-
-
+In our analysis, we assume stakeholders are compensated per ton of CO2 removed from the atmosphere. This may be a result of a policy set by state and local governments. We also assume that the plant is smart enough to cease operation when the LBMP of electricity would cause the plant to run at a loss and would run at maximum capacity otherwise. Additionally, we are assuming it is technically feasible to turn a DAC off and on, cheaply and easily.
 
 # Methodology
+
+This analysis was performed in a jupyter notebook and written in the python programming language. In order to perform our analysis we first had to calculate the revenur of a DAC facility for every 5 minutes of operation given LBMP. We define our parameters as follows. The parameter 'co_offset' is the price of carbon offsets per ton of CO2 captured and removed from the atmosphere. The parameter 'lmbda' is our lambda that corresponds to the power consumed per carbon offset produced (MWh/ton CO2). The parameter 'capacity' is the capacity of a plant in tons of CO2/hr. Finally, 'yr_op_expenses' represents the yearly operating expenses of a plant including the cost of employees, debts, and other fixed costs. We then define our revenue function that calculates the revenue of the facility for a given 5 minute LBMP. It does this by simply using the equation for revenue per hour and converts it into revenue per 5 minutes. Next, we calculated the revenues for the three locations for every LBMP of the year. 
+
+```
+co_offset = 100   # price in $ of carbon offsets per ton ($/Ton CO2)
+
+lmbda = 2.5        # power consumed per carbon offset produced, MWh/ton CO2
+
+capacity = 1       # plant capacity, tons CO2/hr
+
+yr_op_expenses = 250000    # Yearly operating expenses
+
+def RevenuePer5Mins(lbmp):
+    rev_hr = (co_offset - (lbmp*lmbda))*capacity
+    return (rev_hr/60.0) *5
+
+
+genese_revs, dunwood_revs, central_revs = [], [], []
+
+# calculate and collect revenues for the three locations.
+for lbmp in genese["LBMP ($/MWHr)"]:
+    genese_revs.append(RevenuePer5Mins(lbmp))
+    
+for lbmp in dunwood["LBMP ($/MWHr)"]:
+    dunwood_revs.append(RevenuePer5Mins(lbmp))
+    
+for lbmp in central["LBMP ($/MWHr)"]:
+    central_revs.append(RevenuePer5Mins(lbmp))
+    
+# Make dataframes of revenues for different locations with time stamps. 
+genese_revs_df = pd.DataFrame(genese_revs, 
+    index=genese.index, columns =['Revenue ($)'])
+dunwood_revs_df = pd.DataFrame(dunwood_revs, 
+    index=dunwood.index, columns =['Revenue ($)'])
+central_revs_df = pd.DataFrame(central_revs, 
+    index=central.index, columns =['Revenue ($)'])
+
+```
+
+Given this, we are now able to create dataframes from our revenue calculations and sum up our revenues for the three locations to get the Annual Operating Revenue factoring in the cost of power. In order to simulate an optimized DAC plant we removed all of the negative revenues from the dataframes. This falls in line with our assumption that the plant can shut off when the cost of power is too high to make a profit. For comparison the original unoptimized revenues are also saved so we can also asses the difference in revenues between an optimized and unoptimized plant.
+
+```
+# Make dataframes of revenues for different locations with time stamps. 
+genese_revs_df = pd.DataFrame(genese_revs, 
+    index=genese.index, columns =['Revenue ($)'])
+dunwood_revs_df = pd.DataFrame(dunwood_revs, 
+    index=dunwood.index, columns =['Revenue ($)'])
+central_revs_df = pd.DataFrame(central_revs, 
+    index=central.index, columns =['Revenue ($)'])
+
+# Save original dataframes before removing negatives
+genese_revs_og = genese_revs_df
+dunwood_revs_og = dunwood_revs_df
+central_revs_og = central_revs_df
+
+
+print("Genese Revenues Preview:\n", genese_revs_df.head())
+print("\n")
+
+# Assuming we only run the DAC when the LBMP will create a 
+# break even or profit we will remove all negative values
+genese_revs_df = genese_revs_df[genese_revs_df['Revenue ($)'] > 0]
+dunwood_revs_df = dunwood_revs_df[dunwood_revs_df['Revenue ($)'] > 0]
+central_revs_df = central_revs_df[central_revs_df['Revenue ($)'] > 0]
+```
+
+\begin{figure}[H] \centering \includegraphics[scale=.6]{figure7.png} \caption{Optimized Operating Revenues of Genese 2019 given LBMP} \end{figure}
+\begin{figure}[H] \centering \includegraphics[scale=.6]{figure7u.png} \caption{Unoptimized Operating Revenues of Genese 2019 given LBMP} \end{figure}
 
 # Results
 
@@ -95,6 +175,8 @@ In our analysis, we assume stakeholders are compensated per ton of CO2 removed f
 # Future Work
 
 # Acknowledgements
+
+I would like to acknowledge Dr. Small for a great summer course experience learning Time Series Analysis. I truly enjoyed the research and learned a lot from this class that will help me in my career. 
 
 # References
 
